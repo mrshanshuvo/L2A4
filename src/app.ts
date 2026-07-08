@@ -55,8 +55,8 @@ app.get("/", (req: Request, res: Response) => {
   });
 });
 
-app.use("/api/users", UserRoutes);
-app.use("/api/auth", authLimiter, AuthRoutes);
+app.use("/api", UserRoutes);
+app.use("/api", authLimiter, AuthRoutes);
 
 app.use(notFound);
 
