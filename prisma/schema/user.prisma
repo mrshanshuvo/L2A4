@@ -1,0 +1,26 @@
+model User{
+    id String @id @default(uuid())
+    name String @db.VarChar(255)
+    email String @unique @db.VarChar(255)
+    password String @db.VarChar(255)
+    active_status ActiveStatus @default(Active)
+    role Role @default(User)
+    created_at DateTime @default(now())
+    updated_at DateTime @updatedAt
+
+    profile Profile? @relation("UserProfile")
+
+    @@map("users")
+}
+
+
+enum ActiveStatus {
+    Active
+    Inactive
+}
+
+enum Role {
+    Admin
+    User
+    Author
+}
