@@ -1,5 +1,4 @@
-import { JwtPayload, SignOptions } from "jsonwebtoken";
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload, SignOptions } from "jsonwebtoken";
 
 const createToken = (
   payload: JwtPayload,

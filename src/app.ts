@@ -1,15 +1,15 @@
 import cookieParser from "cookie-parser";
-import express, { Application, Request, Response } from "express";
 import cors from "cors";
-import helmet from "helmet";
-import morgan from "morgan";
+import express, { Application, Request, Response } from "express";
 import rateLimit from "express-rate-limit";
-import config from "./config";
+import helmet from "helmet";
 import httpStatus from "http-status";
-import { UserRoutes } from "./modules/user/user.route";
-import { AuthRoutes } from "./modules/auth/auth.route";
-import { notFound } from "./middlewares/notFound";
+import morgan from "morgan";
+import config from "./config";
 import { globalErrorHandler } from "./middlewares/globalErrorHandler";
+import { notFound } from "./middlewares/notFound";
+import { AuthRoutes } from "./modules/auth/auth.route";
+import { UserRoutes } from "./modules/user/user.route";
 
 const app: Application = express();
 
@@ -40,7 +40,8 @@ const authLimiter = rateLimit({
   message: {
     success: false,
     status_code: 429,
-    message: "Too many authentication attempts from this IP, please try again after 15 minutes",
+    message:
+      "Too many authentication attempts from this IP, please try again after 15 minutes",
   },
   standardHeaders: true,
   legacyHeaders: false,
