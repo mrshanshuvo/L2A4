@@ -2,7 +2,7 @@ import bcrypt from "bcryptjs";
 import config from "../../config/index.js";
 import { prisma } from "../../lib/prisma.js";
 import { RegisterUserPayload, UpdateMyProfilePayload } from "./user.interface.js";
-import { ActiveStatus } from "../../../generated/prisma/enums.js";
+import { ActiveStatus } from "@prisma/client";
 
 const registerUserIntoDB = async (payload: RegisterUserPayload) => {
   const { name, email, password, role, profile_image } = payload;

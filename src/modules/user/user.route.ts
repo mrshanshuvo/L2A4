@@ -1,6 +1,6 @@
 import { Router } from "express";
 import rateLimit from "express-rate-limit";
-import { Role } from "../../../generated/prisma/enums.js";
+import { Role } from "@prisma/client";
 import { auth } from "../../middlewares/auth.js";
 import { validateRequest } from "../../middlewares/validateRequest.js";
 import { UserController } from "./user.controller.js";
