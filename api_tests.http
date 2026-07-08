@@ -1,0 +1,100 @@
+### Server Health Check
+GET http://localhost:5000/
+
+### Variables
+@baseUrl = http://localhost:5000/api
+
+### 1. Register Customer
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "name": "Jane Customer",
+  "email": "jane.customer@example.com",
+  "password": "customer123",
+  "role": "Customer",
+  "profile_image": "https://example.com/avatar.jpg"
+}
+
+### 2. Register Provider
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "name": "John Provider",
+  "email": "john.provider@example.com",
+  "password": "provider123",
+  "role": "Provider",
+  "profile_image": "https://example.com/avatar.jpg"
+}
+
+### 3. Login Admin
+# @name loginAdmin
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@example.com",
+  "password": "admin123"
+}
+
+### 4. Login Customer
+# @name loginCustomer
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "password": "user123"
+}
+
+### 5. Login Provider
+# @name loginProvider
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "john.provider@example.com",
+  "password": "provider123"
+}
+
+### 6. Refresh Token
+# (Note: Express cookie-parser will read the refreshToken cookie automatically)
+POST {{baseUrl}}/auth/refresh-token
+Content-Type: application/json
+
+### 7. Get My Profile (Customer)
+# Uses the loginCustomer response variable automatically
+@customerToken = {{loginCustomer.response.body.data.accessToken}}
+
+GET {{baseUrl}}/auth/me
+Authorization: Bearer {{customerToken}}
+
+### 8. Update My Profile (Customer)
+PUT {{baseUrl}}/auth/me
+Authorization: Bearer {{customerToken}}
+Content-Type: application/json
+
+{
+  "name": "Jane Updated",
+  "bio": "Avid cyclist and hiker"
+}
+
+### 9. Admin: Get All Users (Admin only)
+# Uses the loginAdmin response variable automatically
+@adminToken = {{loginAdmin.response.body.data.accessToken}}
+
+GET {{baseUrl}}/admin/users
+Authorization: Bearer {{adminToken}}
+
+### 10. Admin: Update User Status (Suspend Provider)
+# Set target user's UUID from the list returned in GET /admin/users
+@userIdToSuspend = <REPLACE_WITH_USER_ID_FROM_GET_USERS>
+
+PATCH {{baseUrl}}/admin/users/{{userIdToSuspend}}
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "active_status": "Inactive"
+}
