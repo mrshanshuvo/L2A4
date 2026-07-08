@@ -1,4 +1,4 @@
-import { ActiveStatus, Role } from "../../../generated/prisma/enums";
+import { ActiveStatus, Role } from "../../../generated/prisma/enums.js";
 import { z } from "zod";
 
 const createUserValidationSchema = z.object({

@@ -6,10 +6,10 @@ import helmet from "helmet";
 import httpStatus from "http-status";
 import morgan from "morgan";
 import config from "./config/index.js";
-import { globalErrorHandler } from "./middlewares/globalErrorHandler";
-import { notFound } from "./middlewares/notFound";
-import { AuthRoutes } from "./modules/auth/auth.route";
-import { UserRoutes } from "./modules/user/user.route";
+import { globalErrorHandler } from "./middlewares/globalErrorHandler.js";
+import { notFound } from "./middlewares/notFound.js";
+import { AuthRoutes } from "./modules/auth/auth.route.js";
+import { UserRoutes } from "./modules/user/user.route.js";
 
 const app: Application = express();
 

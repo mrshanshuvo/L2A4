@@ -1,10 +1,10 @@
 import { Router } from "express";
 import rateLimit from "express-rate-limit";
-import { Role } from "../../../generated/prisma/enums";
-import { auth } from "../../middlewares/auth";
-import { validateRequest } from "../../middlewares/validateRequest";
-import { UserController } from "./user.controller";
-import { UserValidation } from "./user.validation";
+import { Role } from "../../../generated/prisma/enums.js";
+import { auth } from "../../middlewares/auth.js";
+import { validateRequest } from "../../middlewares/validateRequest.js";
+import { UserController } from "./user.controller.js";
+import { UserValidation } from "./user.validation.js";
 
 const registerLimiter = rateLimit({
   windowMs: 60 * 60 * 1000, // 1 hour

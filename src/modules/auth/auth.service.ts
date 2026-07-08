@@ -1,9 +1,9 @@
 import bcrypt from "bcryptjs";
 import { JwtPayload, SignOptions } from "jsonwebtoken";
 import config from "../../config/index.js";
-import { prisma } from "../../lib/prisma";
-import { jwtUtils } from "../../utils/jwt";
-import { ILoginUser } from "./auth.interface";
+import { prisma } from "../../lib/prisma.js";
+import { jwtUtils } from "../../utils/jwt.js";
+import { ILoginUser } from "./auth.interface.js";
 
 const loginUser = async (payload: ILoginUser) => {
   const { email, password } = payload;

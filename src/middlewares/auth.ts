@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from "express";
-import { jwtUtils } from "../utils/jwt";
+import { jwtUtils } from "../utils/jwt.js";
 import config from "../config/index.js";
-import { Role } from "../../generated/prisma/enums";
-import { catchAsync } from "../utils/catchAsync";
-import { prisma } from "../lib/prisma";
+import { Role } from "../../generated/prisma/enums.js";
+import { catchAsync } from "../utils/catchAsync.js";
+import { prisma } from "../lib/prisma.js";
 import { JwtPayload } from "jsonwebtoken";
 
 declare global {
