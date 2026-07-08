@@ -1,5 +1,5 @@
 import bcrypt from "bcryptjs";
-import config from "../../config";
+import config from "../../config/index.js";
 import { prisma } from "../../lib/prisma";
 import { RegisterUserPayload, UpdateMyProfilePayload } from "./user.interface";
 import { ActiveStatus } from "../../../generated/prisma/enums";

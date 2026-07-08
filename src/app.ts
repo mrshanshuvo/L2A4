@@ -5,7 +5,7 @@ import rateLimit from "express-rate-limit";
 import helmet from "helmet";
 import httpStatus from "http-status";
 import morgan from "morgan";
-import config from "./config";
+import config from "./config/index.js";
 import { globalErrorHandler } from "./middlewares/globalErrorHandler";
 import { notFound } from "./middlewares/notFound";
 import { AuthRoutes } from "./modules/auth/auth.route";
