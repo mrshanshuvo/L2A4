@@ -1,0 +1,64 @@
+import cookieParser from "cookie-parser";
+import express, { Application, Request, Response } from "express";
+import cors from "cors";
+import helmet from "helmet";
+import morgan from "morgan";
+import rateLimit from "express-rate-limit";
+import config from "./config";
+import httpStatus from "http-status";
+import { UserRoutes } from "./modules/user/user.route";
+import { AuthRoutes } from "./modules/auth/auth.route";
+import { notFound } from "./middlewares/notFound";
+import { globalErrorHandler } from "./middlewares/globalErrorHandler";
+
+const app: Application = express();
+
+// Secure Express apps by setting various HTTP headers
+app.use(helmet());
+
+// HTTP request logger middleware
+app.use(morgan("dev"));
+
+app.use(
+  cors({
+    origin: config.app_url,
+    credentials: true,
+  }),
+);
+
+// Raw parser for Stripe Webhooks (must run before express.json())
+app.use("/api/payment/webhook", express.raw({ type: "application/json" }));
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+
+// Rate limiting middleware for auth routes
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Limit each IP to 100 requests per windowMs
+  message: {
+    success: false,
+    status_code: 429,
+    message: "Too many authentication attempts from this IP, please try again after 15 minutes",
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+app.get("/", (req: Request, res: Response) => {
+  res.json({
+    success: true,
+    status_code: httpStatus.OK,
+    message: "Server is running successfully",
+  });
+});
+
+app.use("/api/users", UserRoutes);
+app.use("/api/auth", authLimiter, AuthRoutes);
+
+app.use(notFound);
+
+app.use(globalErrorHandler);
+
+export default app;
