@@ -107,3 +107,24 @@ sendResponse(res, {
   data: result,
 });
 ```
+
+---
+
+## 🚀 Deployment & Serverless (Vercel) Guidelines
+
+### 1. ESM Suffix Requirement
+Because this project utilizes strict ES Modules (ESM) resolution:
+* **All relative imports** inside `src/` (e.g. imports of other `.ts` files or local modules) **must specify the `.js` extension** (e.g., `import app from "./app.js"`).
+* Directory imports (e.g., `import config from "./config"`) are not supported under Node's native ESM engine. Use `import config from "./config/index.js"` instead.
+
+### 2. Standard Prisma Generator Output
+* **Never configure a custom output path** for the generator client in `schema.prisma` (e.g. `output = "../generated/prisma"`).
+* Prisma's internally generated files contain extensionless imports which throw `ERR_MODULE_NOT_FOUND` in production under ESM.
+* Keep the default generator path (`node_modules/@prisma/client`) and import all clients, enums, and types directly from `@prisma/client`.
+
+### 3. Cookies Secure Flag in Development
+* When setting session cookies (e.g. `refreshToken`), dynamically toggle the `secure` option:
+  ```typescript
+  secure: process.env.NODE_ENV === "production"
+  ```
+* Keeping `secure: true` in development causes HTTP local rest clients (like VS Code REST Client) to reject the cookie, making testing token refreshes impossible.
