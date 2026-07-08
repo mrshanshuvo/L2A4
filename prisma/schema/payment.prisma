@@ -1,0 +1,21 @@
+model Payment {
+  id            String        @id @default(uuid())
+  transactionId String        @unique @db.VarChar(255)
+  rentalOrderId String
+  rentalOrder   RentalOrder   @relation("RentalPayments", fields: [rentalOrderId], references: [id])
+  amount        Float
+  method        String        @db.VarChar(50) // e.g., "Stripe" or "SSLCommerz"
+  status        PaymentStatus @default(PENDING)
+  paidAt        DateTime?
+
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@map("payments")
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+}

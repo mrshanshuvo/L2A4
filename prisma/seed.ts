@@ -24,11 +24,7 @@ async function main() {
         email: adminEmail,
         password: hashedAdminPassword,
         role: "Admin" as Role,
-        profile: {
-          create: {
-            bio: "Default administrator account.",
-          },
-        },
+        bio: "Default administrator account.",
       },
     });
     console.log("✅ Admin user seeded successfully!");
@@ -48,12 +44,8 @@ async function main() {
         name: "Default User",
         email: userEmail,
         password: hashedUserPassword,
-        role: "User" as Role,
-        profile: {
-          create: {
-            bio: "Default user account.",
-          },
-        },
+        role: "Customer" as Role,
+        bio: "Default user account.",
       },
     });
     console.log("✅ Standard user seeded successfully!");

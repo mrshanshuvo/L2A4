@@ -4,11 +4,15 @@ model User{
     email String @unique @db.VarChar(255)
     password String @db.VarChar(255)
     active_status ActiveStatus @default(Active)
-    role Role @default(User)
+    role Role @default(Customer)
     created_at DateTime @default(now())
     updated_at DateTime @updatedAt
 
-    profile Profile? @relation("UserProfile")
+    profile_image String? @db.Text
+    bio           String? @db.Text
+    gearItems GearItem[] @relation("ProviderGear")
+    rentals RentalOrder[] @relation("CustomerRentals")
+    reviews Review[] @relation("CustomerReviews")
 
     @@map("users")
 }
@@ -21,6 +25,6 @@ enum ActiveStatus {
 
 enum Role {
     Admin
-    User
-    Author
+    Customer
+    Provider
 }
