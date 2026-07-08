@@ -89,12 +89,12 @@ Authorization: Bearer {{adminToken}}
 
 ### 10. Admin: Update User Status (Suspend Provider)
 # Set target user's UUID from the list returned in GET /admin/users
-@userIdToSuspend = <REPLACE_WITH_USER_ID_FROM_GET_USERS>
+@userIdToSuspend = 9da32f54-85c0-4b94-9a75-87a8d228bcfb
 
 PATCH {{baseUrl}}/admin/users/{{userIdToSuspend}}
 Authorization: Bearer {{adminToken}}
 Content-Type: application/json
 
 {
-  "active_status": "Inactive"
+  "active_status": "Active"
 }
