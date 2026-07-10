@@ -31,7 +31,7 @@ const createPaymentIntentInDB = async (
 
   const paymentIntent = await stripe.paymentIntents.create({
     amount: amountInCents,
-    currency: "usd",
+    currency: "bdt",
     metadata: {
       rentalOrderId: rentalOrder.id,
       customerId,
