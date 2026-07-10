@@ -98,3 +98,93 @@ Content-Type: application/json
 {
   "active_status": "Active"
 }
+
+### 11. Categories (Public & Admin)
+GET {{baseUrl}}/categories
+
+### Create Category (Admin Only)
+POST {{baseUrl}}/categories
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "name": "Climbing Gear",
+  "description": "Harnesses, ropes, and carabiners."
+}
+
+### 12. Gear (Public & Provider & Admin)
+GET {{baseUrl}}/gear?availableOnly=true
+
+### Create Gear Listing (Provider Only)
+@providerToken = {{loginProvider.response.body.data.accessToken}}
+
+POST {{baseUrl}}/provider/gear
+Authorization: Bearer {{providerToken}}
+Content-Type: application/json
+
+{
+  "name": "Standard Climbing Harness",
+  "description": "Adjustable leg loops and comfort padding.",
+  "brand": "Black Diamond",
+  "pricePerDay": 8.0,
+  "stock": 5,
+  "imageUrl": "https://example.com/harness.jpg",
+  "categoryId": "f3673767-759e-4f35-a3d0-de320b834db7"
+}
+
+### 13. Create Rental Order (Customer Only)
+POST {{baseUrl}}/rentals
+Authorization: Bearer {{customerToken}}
+Content-Type: application/json
+
+{
+  "gearItemId": "894b3517-d091-418d-b55a-a978729e94bb",
+  "startDate": "2026-07-15T12:00:00Z",
+  "endDate": "2026-07-20T12:00:00Z"
+}
+
+### 14. Create Payment Intent (Customer Only)
+# Use your created Rental Order ID from the response above
+@rentalOrderId = c42c474d-1aac-4c5c-a6a3-a660b6074cce
+
+POST {{baseUrl}}/payments/create
+Authorization: Bearer {{customerToken}}
+Content-Type: application/json
+
+{
+  "rentalOrderId": "{{rentalOrderId}}"
+}
+
+### 15. Confirm Payment (Customer Only)
+# Use your generated Stripe transaction ID (e.g. pi_...)
+@transactionId = pi_3TrhFSQK4g5kgamz1Uv04U0c
+
+POST {{baseUrl}}/payments/confirm
+Authorization: Bearer {{customerToken}}
+Content-Type: application/json
+
+{
+  "transactionId": "{{transactionId}}"
+}
+
+### 16. Update Rental Status (Provider Only)
+# Update order to returned
+PATCH {{baseUrl}}/provider/orders/{{rentalOrderId}}
+Authorization: Bearer {{providerToken}}
+Content-Type: application/json
+
+{
+  "status": "RETURNED"
+}
+
+### 17. Submit Review (Customer Only)
+POST {{baseUrl}}/reviews
+Authorization: Bearer {{customerToken}}
+Content-Type: application/json
+
+{
+  "gearItemId": "894b3517-d091-418d-b55a-a978729e94bb",
+  "rating": 5,
+  "comment": "Perfect condition, highly recommended!"
+}
+
