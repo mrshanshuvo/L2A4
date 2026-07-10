@@ -195,6 +195,21 @@
         },
         {
           "name": "Create Category (Admin Only)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.success && jsonData.data && jsonData.data.id) {",
+                  "    pm.collectionVariables.set(\"categoryId\", jsonData.data.id);",
+                  "    console.log(\"Saved categoryId automatically!\");",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "POST",
             "header": [
@@ -209,7 +224,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"Snow Sports\",\n  \"description\": \"Skis, snowboards, and winter safety gear.\"\n}"
+              "raw": "{\n  \"name\": \"Water Adventure\",\n  \"description\": \"Kayaks, snorkeling gear, and safety life jackets.\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/categories",
@@ -229,13 +244,13 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/gear?category=Cycling&availableOnly=true",
+              "raw": "{{baseUrl}}/gear?category=Water Adventure&availableOnly=true",
               "host": ["{{baseUrl}}"],
               "path": ["gear"],
               "query": [
                 {
                   "key": "category",
-                  "value": "Cycling"
+                  "value": "Water Adventure"
                 },
                 {
                   "key": "availableOnly",
@@ -251,20 +266,29 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/gear/:id",
+              "raw": "{{baseUrl}}/gear/{{gearItemId}}",
               "host": ["{{baseUrl}}"],
-              "path": ["gear", ":id"],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "gear-item-uuid-here"
-                }
-              ]
+              "path": ["gear", "{{gearItemId}}"]
             }
           }
         },
         {
           "name": "Create Gear (Provider Only)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.success && jsonData.data && jsonData.data.id) {",
+                  "    pm.collectionVariables.set(\"gearItemId\", jsonData.data.id);",
+                  "    console.log(\"Saved gearItemId automatically!\");",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "POST",
             "header": [
@@ -279,7 +303,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"Premium Snowboard\",\n  \"description\": \"All-mountain board ideal for intermediate riders.\",\n  \"brand\": \"Burton\",\n  \"pricePerDay\": 30.0,\n  \"stock\": 3,\n  \"imageUrl\": \"https://example.com/snowboard.jpg\",\n  \"categoryId\": \"category-uuid-here\"\n}"
+              "raw": "{\n  \"name\": \"Premium Kayak Duo\",\n  \"description\": \"Inflatable 2-person kayak with aluminum oars and high output pump.\",\n  \"brand\": \"Intex\",\n  \"pricePerDay\": 45.0,\n  \"stock\": 5,\n  \"imageUrl\": \"https://example.com/kayak.jpg\",\n  \"categoryId\": \"{{categoryId}}\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/provider/gear",
@@ -295,6 +319,21 @@
       "item": [
         {
           "name": "Place Rental Order",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.success && jsonData.data && jsonData.data.id) {",
+                  "    pm.collectionVariables.set(\"rentalOrderId\", jsonData.data.id);",
+                  "    console.log(\"Saved rentalOrderId automatically!\");",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "POST",
             "header": [
@@ -309,7 +348,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"gearItemId\": \"gear-item-uuid-here\",\n  \"startDate\": \"2026-07-15T12:00:00Z\",\n  \"endDate\": \"2026-07-20T12:00:00Z\"\n}"
+              "raw": "{\n  \"gearItemId\": \"{{gearItemId}}\",\n  \"startDate\": \"2026-07-15T12:00:00Z\",\n  \"endDate\": \"2026-07-20T12:00:00Z\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/rentals",
@@ -354,15 +393,9 @@
               "raw": "{\n  \"status\": \"RETURNED\"\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}/provider/orders/:id",
+              "raw": "{{baseUrl}}/provider/orders/{{rentalOrderId}}",
               "host": ["{{baseUrl}}"],
-              "path": ["provider", "orders", ":id"],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "order-uuid-here"
-                }
-              ]
+              "path": ["provider", "orders", "{{rentalOrderId}}"]
             }
           }
         }
@@ -373,6 +406,21 @@
       "item": [
         {
           "name": "Create Payment Intent",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.success && jsonData.data && jsonData.data.transactionId) {",
+                  "    pm.collectionVariables.set(\"transactionId\", jsonData.data.transactionId);",
+                  "    console.log(\"Saved transactionId automatically!\");",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "POST",
             "header": [
@@ -387,7 +435,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"rentalOrderId\": \"order-uuid-here\"\n}"
+              "raw": "{\n  \"rentalOrderId\": \"{{rentalOrderId}}\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/payments/create",
@@ -412,7 +460,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"transactionId\": \"payment-intent-id-here\"\n}"
+              "raw": "{\n  \"transactionId\": \"{{transactionId}}\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/payments/confirm",
@@ -442,7 +490,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"gearItemId\": \"gear-uuid-here\",\n  \"rating\": 5,\n  \"comment\": \"Amazing gear!\"\n}"
+              "raw": "{\n  \"gearItemId\": \"{{gearItemId}}\",\n  \"rating\": 5,\n  \"comment\": \"Amazing gear!\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/reviews",
@@ -473,6 +521,22 @@
     },
     {
       "key": "adminToken",
+      "value": ""
+    },
+    {
+      "key": "categoryId",
+      "value": ""
+    },
+    {
+      "key": "gearItemId",
+      "value": ""
+    },
+    {
+      "key": "rentalOrderId",
+      "value": ""
+    },
+    {
+      "key": "transactionId",
       "value": ""
     }
   ]
