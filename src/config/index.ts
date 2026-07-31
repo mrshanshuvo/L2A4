@@ -32,6 +32,9 @@ const envSchema = z.object({
   STRIPE_PRICE_ID: z.string().optional(),
   STRIPE_SECRET_KEY: z.string().optional(),
   STRIPE_WEBHOOK_SECRET: z.string().optional(),
+  CLOUDINARY_CLOUD_NAME: z.string().optional(),
+  CLOUDINARY_API_KEY: z.string().optional(),
+  CLOUDINARY_API_SECRET: z.string().optional(),
 });
 
 const parsedEnv = envSchema.safeParse(process.env);
@@ -55,4 +58,7 @@ export default {
   stripe_price_id: parsedEnv.data.STRIPE_PRICE_ID,
   stripe_secret_key: parsedEnv.data.STRIPE_SECRET_KEY,
   stripe_webhook_secret: parsedEnv.data.STRIPE_WEBHOOK_SECRET,
+  cloudinary_cloud_name: parsedEnv.data.CLOUDINARY_CLOUD_NAME,
+  cloudinary_api_key: parsedEnv.data.CLOUDINARY_API_KEY,
+  cloudinary_api_secret: parsedEnv.data.CLOUDINARY_API_SECRET,
 };
