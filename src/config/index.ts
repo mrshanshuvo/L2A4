@@ -14,11 +14,11 @@ const envSchema = z.object({
         : "DATABASE_URL must be a valid URL",
   }),
   PORT: z.coerce.number().default(3000),
-  APP_URL: z.url({
+  APP_URL: z.string({
     error: (issue) =>
       issue.input === undefined || issue.input === ""
         ? "APP_URL is required"
-        : "APP_URL must be a valid URL",
+        : "APP_URL must be a string",
   }),
   BCRYPT_SALT_ROUNDS: z.coerce.number().default(10),
   JWT_ACCESS_SECRET: z.string({ error: "JWT_ACCESS_SECRET is required" }),
@@ -44,7 +44,9 @@ if (!parsedEnv.success) {
 export default {
   database_url: parsedEnv.data.DATABASE_URL,
   port: parsedEnv.data.PORT,
-  app_url: parsedEnv.data.APP_URL,
+  app_url: parsedEnv.data.APP_URL.includes(",")
+    ? parsedEnv.data.APP_URL.split(",").map((origin) => origin.trim())
+    : parsedEnv.data.APP_URL.trim(),
   bcrypt_salt_rounds: parsedEnv.data.BCRYPT_SALT_ROUNDS,
   jwt_access_secret: parsedEnv.data.JWT_ACCESS_SECRET,
   jwt_refresh_secret: parsedEnv.data.JWT_REFRESH_SECRET,
