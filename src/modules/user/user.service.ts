@@ -46,8 +46,8 @@ const registerUserIntoDB = async (payload: RegisterUserPayload) => {
       active_status: true,
       profile_image: true,
       bio: true,
-      createdAt: true,
-      updatedAt: true,
+      created_at: true,
+      updated_at: true,
     },
   });
 
@@ -65,8 +65,8 @@ const getMyProfileFromDB = async (id: string) => {
       active_status: true,
       profile_image: true,
       bio: true,
-      createdAt: true,
-      updatedAt: true,
+      created_at: true,
+      updated_at: true,
     },
   });
 
@@ -104,8 +104,8 @@ const updateMyProfileIntoDB = async ({
       active_status: true,
       profile_image: true,
       bio: true,
-      createdAt: true,
-      updatedAt: true,
+      created_at: true,
+      updated_at: true,
     },
   });
 
@@ -122,8 +122,8 @@ const getAllUsersFromDB = async () => {
       active_status: true,
       profile_image: true,
       bio: true,
-      createdAt: true,
-      updatedAt: true,
+      created_at: true,
+      updated_at: true,
     },
   });
   return result;
@@ -152,8 +152,8 @@ const updateUserStatusInDB = async (
       active_status: true,
       profile_image: true,
       bio: true,
-      createdAt: true,
-      updatedAt: true,
+      created_at: true,
+      updated_at: true,
     },
   });
 
