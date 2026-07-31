@@ -21,8 +21,11 @@ export interface UpdateGearPayload {
 export interface GearQueryFilters {
   searchTerm?: string;
   category?: string;
+  categoryId?: string;
   brand?: string;
   minPrice?: string;
   maxPrice?: string;
   availableOnly?: string;
+  limit?: string;
+  page?: string;
 }
