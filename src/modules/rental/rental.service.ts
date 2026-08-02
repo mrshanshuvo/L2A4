@@ -70,6 +70,7 @@ const createRentalOrderInDB = async (
 };
 
 const getCustomerRentalsFromDB = async (customerId: string) => {
+  const total = await prisma.rentalOrder.count({ where: { customerId } });
   const result = await prisma.rentalOrder.findMany({
     where: { customerId },
     include: {
@@ -81,7 +82,10 @@ const getCustomerRentalsFromDB = async (customerId: string) => {
     },
     orderBy: { createdAt: "desc" },
   });
-  return result;
+  return {
+    meta: { page: 1, limit: total, total },
+    data: result,
+  };
 };
 
 const getRentalByIdFromDB = async (
@@ -131,6 +135,9 @@ const getRentalByIdFromDB = async (
 };
 
 const getProviderOrdersFromDB = async (providerId: string) => {
+  const total = await prisma.rentalOrder.count({
+    where: { gearItem: { providerId } },
+  });
   const result = await prisma.rentalOrder.findMany({
     where: {
       gearItem: {
@@ -149,7 +156,10 @@ const getProviderOrdersFromDB = async (providerId: string) => {
     },
     orderBy: { createdAt: "desc" },
   });
-  return result;
+  return {
+    meta: { page: 1, limit: total, total },
+    data: result,
+  };
 };
 
 const updateRentalOrderStatusInDB = async (
@@ -199,7 +209,10 @@ const updateRentalOrderStatusInDB = async (
 
   const result = await prisma.$transaction(async (tx) => {
     // If transitioning to CANCELLED or RETURNED, increment stock back
-    if (status === RentalOrderStatus.CANCELLED || status === RentalOrderStatus.RETURNED) {
+    if (
+      status === RentalOrderStatus.CANCELLED ||
+      status === RentalOrderStatus.RETURNED
+    ) {
       // Avoid double restocking if already returned/cancelled
       if (
         rental.status !== RentalOrderStatus.CANCELLED &&
@@ -231,6 +244,7 @@ const updateRentalOrderStatusInDB = async (
 };
 
 const getAllRentalsForAdminFromDB = async () => {
+  const total = await prisma.rentalOrder.count();
   const result = await prisma.rentalOrder.findMany({
     include: {
       gearItem: true,
@@ -244,7 +258,14 @@ const getAllRentalsForAdminFromDB = async () => {
     },
     orderBy: { createdAt: "desc" },
   });
-  return result;
+  return {
+    meta: {
+      page: 1,
+      limit: total,
+      total,
+    },
+    data: result,
+  };
 };
 
 export const RentalService = {

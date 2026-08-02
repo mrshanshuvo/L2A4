@@ -19,10 +19,23 @@ const createCategoryInDB = async (payload: CreateCategoryPayload) => {
 };
 
 const getAllCategoriesFromDB = async () => {
+  const total = await prisma.category.count();
   const result = await prisma.category.findMany({
+    include: {
+      _count: {
+        select: { gearItems: true },
+      },
+    },
     orderBy: { name: "asc" },
   });
-  return result;
+  return {
+    meta: {
+      page: 1,
+      limit: total,
+      total,
+    },
+    data: result,
+  };
 };
 
 const updateCategoryInDB = async (

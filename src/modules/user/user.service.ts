@@ -113,6 +113,7 @@ const updateMyProfileIntoDB = async ({
 };
 
 const getAllUsersFromDB = async () => {
+  const total = await prisma.user.count();
   const result = await prisma.user.findMany({
     select: {
       id: true,
@@ -125,8 +126,16 @@ const getAllUsersFromDB = async () => {
       created_at: true,
       updated_at: true,
     },
+    orderBy: { created_at: "desc" },
   });
-  return result;
+  return {
+    meta: {
+      page: 1,
+      limit: total,
+      total,
+    },
+    data: result,
+  };
 };
 
 const updateUserStatusInDB = async (

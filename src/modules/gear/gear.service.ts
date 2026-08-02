@@ -1,7 +1,14 @@
 import { prisma } from "../../lib/prisma.js";
-import { CreateGearPayload, UpdateGearPayload, GearQueryFilters } from "./gear.interface.js";
+import {
+  CreateGearPayload,
+  UpdateGearPayload,
+  GearQueryFilters,
+} from "./gear.interface.js";
 
-const createGearInDB = async (payload: CreateGearPayload, providerId: string) => {
+const createGearInDB = async (
+  payload: CreateGearPayload,
+  providerId: string,
+) => {
   const categoryExists = await prisma.category.findUnique({
     where: { id: payload.categoryId },
   });
@@ -19,7 +26,17 @@ const createGearInDB = async (payload: CreateGearPayload, providerId: string) =>
 };
 
 const getAllGearFromDB = async (filters: GearQueryFilters) => {
-  const { searchTerm, category, categoryId, brand, minPrice, maxPrice, availableOnly, limit, page } = filters;
+  const {
+    searchTerm,
+    category,
+    categoryId,
+    brand,
+    minPrice,
+    maxPrice,
+    availableOnly,
+    limit,
+    page,
+  } = filters;
 
   const whereConditions: any = {};
 
@@ -59,7 +76,10 @@ const getAllGearFromDB = async (filters: GearQueryFilters) => {
   }
 
   const take = limit ? parseInt(limit) : undefined;
-  const skip = page && limit ? (parseInt(page) - 1) * parseInt(limit) : undefined;
+  const skip =
+    page && limit ? (parseInt(page) - 1) * parseInt(limit) : undefined;
+
+  const total = await prisma.gearItem.count({ where: whereConditions });
 
   const result = await prisma.gearItem.findMany({
     where: whereConditions,
@@ -82,7 +102,14 @@ const getAllGearFromDB = async (filters: GearQueryFilters) => {
     ...(skip !== undefined ? { skip } : {}),
   });
 
-  return result;
+  return {
+    meta: {
+      page: page ? parseInt(page) : 1,
+      limit: limit ? parseInt(limit) : total,
+      total,
+    },
+    data: result,
+  };
 };
 
 const getGearByIdFromDB = async (id: string) => {
@@ -175,6 +202,7 @@ const deleteGearFromDB = async (id: string, providerId: string) => {
 };
 
 const getAllGearForAdminFromDB = async () => {
+  const total = await prisma.gearItem.count();
   const result = await prisma.gearItem.findMany({
     include: {
       category: true,
@@ -188,7 +216,10 @@ const getAllGearForAdminFromDB = async () => {
     },
     orderBy: { createdAt: "desc" },
   });
-  return result;
+  return {
+    meta: { page: 1, limit: total, total },
+    data: result,
+  };
 };
 
 export const GearService = {

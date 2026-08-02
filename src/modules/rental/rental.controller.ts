@@ -23,13 +23,14 @@ const createRentalOrder = catchAsync(
 const getCustomerRentals = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const customerId = req.user?.id as string;
-    const result = await RentalService.getCustomerRentalsFromDB(customerId);
+    const { meta, data } = await RentalService.getCustomerRentalsFromDB(customerId);
 
     sendResponse(res, {
       success: true,
       status_code: httpStatus.OK,
       message: "Customer rentals retrieved successfully",
-      data: result,
+      meta,
+      data,
     });
   },
 );
@@ -53,13 +54,14 @@ const getRentalById = catchAsync(
 const getProviderOrders = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const providerId = req.user?.id as string;
-    const result = await RentalService.getProviderOrdersFromDB(providerId);
+    const { meta, data } = await RentalService.getProviderOrdersFromDB(providerId);
 
     sendResponse(res, {
       success: true,
       status_code: httpStatus.OK,
-      message: "Provider incoming orders retrieved successfully",
-      data: result,
+      message: "Provider orders retrieved successfully",
+      meta,
+      data,
     });
   },
 );
@@ -88,13 +90,14 @@ const updateRentalOrderStatus = catchAsync(
 
 const getAllRentalsAdmin = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const result = await RentalService.getAllRentalsForAdminFromDB();
+    const { meta, data } = await RentalService.getAllRentalsForAdminFromDB();
 
     sendResponse(res, {
       success: true,
       status_code: httpStatus.OK,
       message: "All platform rental orders retrieved successfully",
-      data: result,
+      meta,
+      data,
     });
   },
 );

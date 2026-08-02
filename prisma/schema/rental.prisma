@@ -1,9 +1,9 @@
 model RentalOrder {
   id         String            @id @default(uuid())
   customerId String
-  customer   User              @relation("CustomerRentals", fields: [customerId], references: [id])
+  customer   User              @relation("CustomerRentals", fields: [customerId], references: [id], onDelete: Cascade)
   gearItemId String
-  gearItem   GearItem          @relation("GearRentals", fields: [gearItemId], references: [id])
+  gearItem   GearItem          @relation("GearRentals", fields: [gearItemId], references: [id], onDelete: Cascade)
   startDate  DateTime
   endDate    DateTime
   totalCost  Float

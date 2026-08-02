@@ -22,13 +22,14 @@ const createGear = catchAsync(
 const getAllGear = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const filters = req.query;
-    const result = await GearService.getAllGearFromDB(filters);
+    const { meta, data } = await GearService.getAllGearFromDB(filters);
 
     sendResponse(res, {
       success: true,
       status_code: httpStatus.OK,
       message: "Gear items retrieved successfully",
-      data: result,
+      meta,
+      data,
     });
   },
 );
@@ -80,13 +81,14 @@ const deleteGear = catchAsync(
 
 const getAllGearAdmin = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const result = await GearService.getAllGearForAdminFromDB();
+    const { meta, data } = await GearService.getAllGearForAdminFromDB();
 
     sendResponse(res, {
       success: true,
       status_code: httpStatus.OK,
       message: "All platform gear items retrieved successfully",
-      data: result,
+      meta,
+      data,
     });
   },
 );

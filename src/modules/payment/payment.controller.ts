@@ -63,13 +63,14 @@ const getUserPayments = catchAsync(
     const userId = req.user?.id as string;
     const role = req.user?.role as Role;
 
-    const result = await PaymentService.getUserPaymentsFromDB(userId, role);
+    const { meta, data } = await PaymentService.getUserPaymentsFromDB(userId, role);
 
     sendResponse(res, {
       success: true,
       status_code: httpStatus.OK,
       message: "Payment history retrieved successfully",
-      data: result,
+      meta,
+      data,
     });
   },
 );

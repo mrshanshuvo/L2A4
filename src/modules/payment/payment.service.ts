@@ -171,6 +171,7 @@ const handleStripeWebhook = async (
 
 const getUserPaymentsFromDB = async (userId: string, role: Role) => {
   if (role === Role.Admin) {
+    const total = await prisma.payment.count();
     const result = await prisma.payment.findMany({
       include: {
         rentalOrder: {
@@ -184,9 +185,15 @@ const getUserPaymentsFromDB = async (userId: string, role: Role) => {
       },
       orderBy: { createdAt: "desc" },
     });
-    return result;
+    return {
+      meta: { page: 1, limit: total, total },
+      data: result,
+    };
   } else {
     // Return payments for rentals belong to this customer
+    const total = await prisma.payment.count({
+      where: { rentalOrder: { customerId: userId } },
+    });
     const result = await prisma.payment.findMany({
       where: {
         rentalOrder: {
@@ -202,7 +209,10 @@ const getUserPaymentsFromDB = async (userId: string, role: Role) => {
       },
       orderBy: { createdAt: "desc" },
     });
-    return result;
+    return {
+      meta: { page: 1, limit: total, total },
+      data: result,
+    };
   }
 };
 

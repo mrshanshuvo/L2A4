@@ -55,13 +55,14 @@ const updateMyProfile = catchAsync(
 
 const getAllUsers = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const result = await UserService.getAllUsersFromDB();
+    const { meta, data } = await UserService.getAllUsersFromDB();
 
     sendResponse(res, {
       success: true,
       status_code: httpStatus.OK,
       message: "Users retrieved successfully",
-      data: result,
+      meta,
+      data,
     });
   },
 );
