@@ -9,7 +9,8 @@ export const globalErrorHandler = (
   res: Response,
   next: NextFunction,
 ) => {
-  let status_code;
+  let status_code: number =
+    error.statusCode || error.status || httpStatus.INTERNAL_SERVER_ERROR;
   let error_message = error.message || "INTERNAL_SERVER_ERROR";
   let error_name = error.name || "INTERNAL_SERVER_ERROR";
 
@@ -52,6 +53,14 @@ export const globalErrorHandler = (
   } else if (error instanceof Prisma.PrismaClientRustPanicError) {
     status_code = httpStatus.INTERNAL_SERVER_ERROR;
     error_message = "Prisma engine crashed";
+  } else if (
+    error.name === "DriverAdapterError" &&
+    error.message?.includes("foreign key constraint")
+  ) {
+    status_code = httpStatus.BAD_REQUEST;
+    error_name = "Constraint Error";
+    error_message =
+      "Cannot delete or update record because other items are referencing it.";
   } else {
     // For general errors that might have custom status codes (e.g. from validation or custom errors)
     status_code =

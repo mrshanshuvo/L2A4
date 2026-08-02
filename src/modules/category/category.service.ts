@@ -1,5 +1,8 @@
 import { prisma } from "../../lib/prisma.js";
-import { CreateCategoryPayload, UpdateCategoryPayload } from "./category.interface.js";
+import {
+  CreateCategoryPayload,
+  UpdateCategoryPayload,
+} from "./category.interface.js";
 
 const createCategoryInDB = async (payload: CreateCategoryPayload) => {
   const isExist = await prisma.category.findUnique({
@@ -22,7 +25,10 @@ const getAllCategoriesFromDB = async () => {
   return result;
 };
 
-const updateCategoryInDB = async (id: string, payload: UpdateCategoryPayload) => {
+const updateCategoryInDB = async (
+  id: string,
+  payload: UpdateCategoryPayload,
+) => {
   const isExist = await prisma.category.findUnique({
     where: { id },
   });

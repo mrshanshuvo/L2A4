@@ -9,10 +9,10 @@ model RentalOrder {
   totalCost  Float
   status     RentalOrderStatus @default(PLACED)
 
-  payments   Payment[]         @relation("RentalPayments")
+  payments Payment[] @relation("RentalPayments")
 
-  createdAt  DateTime          @default(now())
-  updatedAt  DateTime          @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("rental_orders")
 }
