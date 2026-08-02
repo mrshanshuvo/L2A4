@@ -19,7 +19,7 @@ const createGearInDB = async (payload: CreateGearPayload, providerId: string) =>
 };
 
 const getAllGearFromDB = async (filters: GearQueryFilters) => {
-  const { searchTerm, category, brand, minPrice, maxPrice, availableOnly } = filters;
+  const { searchTerm, category, categoryId, brand, minPrice, maxPrice, availableOnly, limit, page } = filters;
 
   const whereConditions: any = {};
 
@@ -30,14 +30,18 @@ const getAllGearFromDB = async (filters: GearQueryFilters) => {
     ];
   }
 
-  if (category) {
+  // Filter by category UUID (from frontend pill navigation)
+  if (categoryId) {
+    whereConditions.categoryId = categoryId;
+  } else if (category) {
+    // Fallback: filter by category name
     whereConditions.category = {
       name: { equals: category, mode: "insensitive" },
     };
   }
 
   if (brand) {
-    whereConditions.brand = { equals: brand, mode: "insensitive" };
+    whereConditions.brand = { contains: brand, mode: "insensitive" };
   }
 
   if (minPrice || maxPrice) {
@@ -54,6 +58,9 @@ const getAllGearFromDB = async (filters: GearQueryFilters) => {
     whereConditions.stock = { gt: 0 };
   }
 
+  const take = limit ? parseInt(limit) : undefined;
+  const skip = page && limit ? (parseInt(page) - 1) * parseInt(limit) : undefined;
+
   const result = await prisma.gearItem.findMany({
     where: whereConditions,
     include: {
@@ -66,8 +73,13 @@ const getAllGearFromDB = async (filters: GearQueryFilters) => {
           profile_image: true,
         },
       },
+      _count: {
+        select: { reviews: true },
+      },
     },
     orderBy: { createdAt: "desc" },
+    ...(take ? { take } : {}),
+    ...(skip !== undefined ? { skip } : {}),
   });
 
   return result;

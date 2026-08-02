@@ -56,7 +56,32 @@ const refreshToken = catchAsync(
   },
 );
 
+const logoutUser = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    res.clearCookie("accessToken", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      path: "/",
+    });
+    res.clearCookie("refreshToken", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      path: "/",
+    });
+
+    sendResponse(res, {
+      success: true,
+      status_code: httpStatus.OK,
+      message: "User logged out successfully",
+      data: null,
+    });
+  },
+);
+
 export const AuthController = {
   loginUser,
   refreshToken,
+  logoutUser,
 };

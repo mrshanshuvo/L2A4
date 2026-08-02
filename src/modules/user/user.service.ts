@@ -1,7 +1,10 @@
 import bcrypt from "bcryptjs";
 import config from "../../config/index.js";
 import { prisma } from "../../lib/prisma.js";
-import { RegisterUserPayload, UpdateMyProfilePayload } from "./user.interface.js";
+import {
+  RegisterUserPayload,
+  UpdateMyProfilePayload,
+} from "./user.interface.js";
 import { ActiveStatus } from "@prisma/client";
 
 const registerUserIntoDB = async (payload: RegisterUserPayload) => {
@@ -35,8 +38,16 @@ const registerUserIntoDB = async (payload: RegisterUserPayload) => {
       id: createdUser.id,
       email: createdUser.email,
     },
-    omit: {
-      password: true,
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      role: true,
+      active_status: true,
+      profile_image: true,
+      bio: true,
+      created_at: true,
+      updated_at: true,
     },
   });
 
@@ -46,7 +57,17 @@ const registerUserIntoDB = async (payload: RegisterUserPayload) => {
 const getMyProfileFromDB = async (id: string) => {
   const profile = await prisma.user.findUnique({
     where: { id },
-    omit: { password: true },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      role: true,
+      active_status: true,
+      profile_image: true,
+      bio: true,
+      created_at: true,
+      updated_at: true,
+    },
   });
 
   if (!profile) {
@@ -75,7 +96,17 @@ const updateMyProfileIntoDB = async ({
       profile_image,
       bio,
     },
-    omit: { password: true },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      role: true,
+      active_status: true,
+      profile_image: true,
+      bio: true,
+      created_at: true,
+      updated_at: true,
+    },
   });
 
   return updatedUser;
@@ -83,12 +114,25 @@ const updateMyProfileIntoDB = async ({
 
 const getAllUsersFromDB = async () => {
   const result = await prisma.user.findMany({
-    omit: { password: true },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      role: true,
+      active_status: true,
+      profile_image: true,
+      bio: true,
+      created_at: true,
+      updated_at: true,
+    },
   });
   return result;
 };
 
-const updateUserStatusInDB = async (id: string, active_status: ActiveStatus) => {
+const updateUserStatusInDB = async (
+  id: string,
+  active_status: ActiveStatus,
+) => {
   const userExists = await prisma.user.findUnique({
     where: { id },
   });
@@ -100,7 +144,17 @@ const updateUserStatusInDB = async (id: string, active_status: ActiveStatus) => 
   const result = await prisma.user.update({
     where: { id },
     data: { active_status },
-    omit: { password: true },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      role: true,
+      active_status: true,
+      profile_image: true,
+      bio: true,
+      created_at: true,
+      updated_at: true,
+    },
   });
 
   return result;

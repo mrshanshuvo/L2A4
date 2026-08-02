@@ -3,6 +3,7 @@ import httpStatus from "http-status";
 import { catchAsync } from "../../utils/catchAsync.js";
 import { sendResponse } from "../../utils/sendResponse.js";
 import { UserService } from "./user.service.js";
+import { uploadToCloudinary } from "../../lib/cloudinary.js";
 
 const registerUser = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -81,10 +82,31 @@ const updateUserStatus = catchAsync(
   },
 );
 
+const uploadImage = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    if (!req.file) {
+      throw new Error("No image file provided");
+    }
+
+    const result = await uploadToCloudinary(req.file.buffer, "gearup");
+
+    sendResponse(res, {
+      success: true,
+      status_code: httpStatus.OK,
+      message: "Image uploaded to Cloudinary successfully",
+      data: {
+        url: result.url,
+        public_id: result.public_id,
+      },
+    });
+  },
+);
+
 export const UserController = {
   registerUser,
   getMyProfile,
   updateMyProfile,
   getAllUsers,
   updateUserStatus,
+  uploadImage,
 };

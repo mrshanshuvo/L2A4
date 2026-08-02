@@ -5,6 +5,7 @@ import { auth } from "../../middlewares/auth.js";
 import { validateRequest } from "../../middlewares/validateRequest.js";
 import { UserController } from "./user.controller.js";
 import { UserValidation } from "./user.validation.js";
+import { upload } from "../../lib/cloudinary.js";
 
 const registerLimiter = rateLimit({
   windowMs: 60 * 60 * 1000, // 1 hour
@@ -40,6 +41,13 @@ router.put(
   auth(Role.Admin, Role.Provider, Role.Customer),
   validateRequest(UserValidation.updateUserValidationSchema),
   UserController.updateMyProfile,
+);
+
+router.post(
+  "/upload",
+  auth(Role.Admin, Role.Provider, Role.Customer),
+  upload.single("file"),
+  UserController.uploadImage,
 );
 
 // Admin User Management Paths
