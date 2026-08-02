@@ -8,9 +8,13 @@ import { ILoginUser } from "./auth.interface.js";
 const loginUser = async (payload: ILoginUser) => {
   const { email, password } = payload;
 
-  const user = await prisma.user.findFirstOrThrow({
+  const user = await prisma.user.findUnique({
     where: { email },
   });
+
+  if (!user) {
+    throw new Error("No account found with this email address");
+  }
 
   if (user.active_status === "Inactive") {
     throw new Error(
